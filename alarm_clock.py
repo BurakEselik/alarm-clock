@@ -72,6 +72,24 @@ class AlarmClock(tk.Tk):
         self.combobox_sec['state'] = 'readonly'
         self.combobox_sec.place(x=290, y=50)
 
+        #radiobuttons
+        self.selected_time = tk.StringVar()
+        self.r1 = ttk.Radiobutton(self, text='a.m.', value='1', variable=self.selected_time)
+        self.r2 = ttk.Radiobutton(self, text='p.m.', value='2', variable=self.selected_time)
+        self.r1.place(x=130, y=90)
+        self.r2.place(x=210, y=90)
+
+        #buttons
+        self.btn_sound = tk.Button(self, text='Set Sound', bg='light green')
+        self.btn_save = tk.Button(self, text='Set Alarm', bg='#f76f6f')
+        self.btn_sound.place(x=150, y=130)
+        self.btn_save.place(x=150, y=170)
+        self.btn_reset = tk.Button(self, text='Reset', bg='red', fg='white')
+        self.btn_reset.place(x=70, y=220)
+
+        #remaning time label
+        self.lbl_remaning_time = tk.Label(self, text='Remaning Time: 2h 3m 2s', fg='green')
+        self.lbl_remaning_time.place(x=160, y=220)
 
 if __name__ == '__main__':
     alarm = AlarmClock(className='Alarm Clock')
