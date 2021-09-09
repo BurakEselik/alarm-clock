@@ -6,6 +6,35 @@ from tkinter.messagebox import showinfo
 from datetime import datetime, time
 
 
+#search: how to a program runs back ground or runs even if the program close.
+#search: how to a program send a notification 
+
+class Alarm():
+
+    def __init__(self, h, m, s, **days) -> None:
+        self.h = h
+        self.m = m
+        self.s = s
+        self.days = days
+        #TODO check if is there a same h, m, s, days instance don't create and return an error!
+
+    def alarm(self):
+        #TODO while loop is here
+        #TODO while loop runs set_remaning_time method each 1 sec until min=0 sec=0 hour=0
+        #TODO if hour sec and min be 0 lunch the sound just a 1 min.
+        pass
+
+    def remaning_time(self):
+        pass
+
+    def play_sound(self):
+        pass
+
+
+
+#TODO treading runs alarm function.
+
+
 #layout
 class AlarmClock(tk.Tk):
 
@@ -50,7 +79,7 @@ class AlarmClock(tk.Tk):
         self.lbl_hour.place(x=50, y=50)
         self.widget_var_hour = tk.StringVar()
         self.combobox_hour = ttk.Combobox(self, textvariable=self.widget_var_hour, width=5)
-        self.hours = [str(i) for i in range(1, 13)]
+        self.hours = [str(i) for i in range(0, 24)]
         self.combobox_hour['values'] = tuple(self.hours)
         self.combobox_hour['state'] = 'readonly'
         self.combobox_hour.place(x=90, y=50)
@@ -75,19 +104,37 @@ class AlarmClock(tk.Tk):
         self.combobox_sec['state'] = 'readonly'
         self.combobox_sec.place(x=290, y=50)
 
-        #radiobuttons
-        self.selected_time = tk.StringVar()
-        self.r1 = ttk.Radiobutton(self, text='a.m.', value='a.m.', variable=self.selected_time)
-        self.r2 = ttk.Radiobutton(self, text='p.m.', value='p.m.', variable=self.selected_time)
-        self.r1.place(x=130, y=90)
-        self.r2.place(x=210, y=90)
+        #checkboxes for weekdays
+        self.days_list = ['mon', 'tue', 'wed','thur', 'fri', 'sat', 'sun']
+        
+        self.sd_mon = tk.StringVar()
+        self.sd_tue = tk.StringVar()
+        self.sd_wed = tk.StringVar()
+        self.sd_thur = tk.StringVar()
+        self.sd_fri = tk.StringVar()
+        self.sd_sat= tk.StringVar()
+        self.sd_sun = tk.StringVar()
+        self.check_monday = ttk.Checkbutton(self, text='mon', variable=self.sd_mon, onvalue='mon', offvalue=None)
+        self.check_tuesday = ttk.Checkbutton(self, text='tue', variable=self.sd_tue, onvalue='tue', offvalue=None)
+        self.check_wed = ttk.Checkbutton(self, text='wed', variable=self.sd_wed, onvalue='wed', offvalue=None)
+        self.check_thursday = ttk.Checkbutton(self, text='thu', variable=self.sd_thur, onvalue='thu', offvalue=None)
+        self.check_friday = ttk.Checkbutton(self, text='fri', variable=self.sd_fri, onvalue='fri', offvalue=None)
+        self.check_saturday = ttk.Checkbutton(self, text='sat', variable=self.sd_sat, onvalue='sat', offvalue=None)
+        self.check_sunday = ttk.Checkbutton(self, text='sun', variable=self.sd_sun, onvalue='sun', offvalue=None)
+        self.check_monday.place(x=30, y=90)
+        self.check_tuesday.place(x=80, y=90)
+        self.check_wed.place(x=130, y=90)
+        self.check_thursday.place(x=180, y=90)
+        self.check_friday.place(x=230, y=90)
+        self.check_saturday.place(x=280, y=90)
+        self.check_sunday.place(x=330, y=90) 
 
         #buttons
-        self.btn_sound = tk.Button(self, text='Set Sound', bg='light green')
-        self.btn_save = tk.Button(self, text='Set Alarm', bg='#f76f6f', command=self.set_alarm)
+        self.btn_sound = tk.Button(self, text='Set Sound', bg='#264653',fg='white', width=15)
+        self.btn_save = tk.Button(self, text='Set Alarm', bg='#2a9d8f',fg='white', width=15, command=self.set_alarm)
         self.btn_sound.place(x=150, y=130)
         self.btn_save.place(x=150, y=170)
-        self.btn_reset = tk.Button(self, text='Reset', bg='red', fg='white')
+        self.btn_reset = tk.Button(self, text='Reset', bg='#e76f51', fg='white', command=self.reset)
         self.btn_reset.place(x=70, y=220)
 
         #remaning time label
@@ -95,11 +142,9 @@ class AlarmClock(tk.Tk):
         self.lbl_remaning_time.place(x=160, y=220)
 
     def set_alarm(self):
-        if self.selected_time.get() and self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
-            hour_s = self.selected_time.get()
-            hour = self.combobox_hour.get()
-            min = self.combobox_min.get()
-            sec = self.combobox_sec.get()
+        if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
+            hour,min,sec = self.combobox_hour.get(),self.combobox_min.get(),self.combobox_sec.get()
+            #TODO create a Alarm instance
             #TODO trigger the treading 
 
         else:
@@ -107,24 +152,15 @@ class AlarmClock(tk.Tk):
 
 
     def set_sound(self):
+        #TODO open a box and show including sounds and besides user sets a music from own music!
         ...
 
+    
     def reset(self):
-        ...
-
-    def remaining_time(self, hour_s, hour=0, min=0, sec=0 ):
-        pass
-
-    def play_sound(self):
-        pass
-
-    def alarm(self):
-        #TODO while loop is here
-        #TODO while loop runs set_remaning_time method each 1 sec until min=0 sec=0 hour=0
-        #TODO if hour sec and min be 0 lunch the sound just a 1 min.
-        pass
-
-#TODO treading runs alarm function.
+        self.combobox_hour.set('')
+        self.combobox_min.set('')
+        self.combobox_sec.set('')
+        self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thur.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
 
 if __name__ == '__main__':
     alarm = AlarmClock(className='Alarm Clock')
