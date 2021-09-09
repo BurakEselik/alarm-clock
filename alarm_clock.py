@@ -2,6 +2,8 @@
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import showinfo
+from datetime import datetime, time
 
 
 #layout
@@ -24,6 +26,7 @@ class AlarmClock(tk.Tk):
         self.config(menu=self.menubar)
         self.file_menu = tk.Menu(self.menubar, tearoff=False)
         self.file_menu.add_command(label='Save Time')
+        self.file_menu.add_command(label='Saved Times')
         self.file_menu.add_separator()
         #submenu
         self.sub_menu = tk.Menu(self.file_menu, tearoff=0)
@@ -47,7 +50,7 @@ class AlarmClock(tk.Tk):
         self.lbl_hour.place(x=50, y=50)
         self.widget_var_hour = tk.StringVar()
         self.combobox_hour = ttk.Combobox(self, textvariable=self.widget_var_hour, width=5)
-        self.hours = [str(i) for i in range(0, 13)]
+        self.hours = [str(i) for i in range(1, 13)]
         self.combobox_hour['values'] = tuple(self.hours)
         self.combobox_hour['state'] = 'readonly'
         self.combobox_hour.place(x=90, y=50)
@@ -74,14 +77,14 @@ class AlarmClock(tk.Tk):
 
         #radiobuttons
         self.selected_time = tk.StringVar()
-        self.r1 = ttk.Radiobutton(self, text='a.m.', value='1', variable=self.selected_time)
-        self.r2 = ttk.Radiobutton(self, text='p.m.', value='2', variable=self.selected_time)
+        self.r1 = ttk.Radiobutton(self, text='a.m.', value='a.m.', variable=self.selected_time)
+        self.r2 = ttk.Radiobutton(self, text='p.m.', value='p.m.', variable=self.selected_time)
         self.r1.place(x=130, y=90)
         self.r2.place(x=210, y=90)
 
         #buttons
         self.btn_sound = tk.Button(self, text='Set Sound', bg='light green')
-        self.btn_save = tk.Button(self, text='Set Alarm', bg='#f76f6f')
+        self.btn_save = tk.Button(self, text='Set Alarm', bg='#f76f6f', command=self.set_alarm)
         self.btn_sound.place(x=150, y=130)
         self.btn_save.place(x=150, y=170)
         self.btn_reset = tk.Button(self, text='Reset', bg='red', fg='white')
@@ -90,6 +93,38 @@ class AlarmClock(tk.Tk):
         #remaning time label
         self.lbl_remaning_time = tk.Label(self, text='Remaning Time: 2h 3m 2s', fg='green')
         self.lbl_remaning_time.place(x=160, y=220)
+
+    def set_alarm(self):
+        if self.selected_time.get() and self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
+            hour_s = self.selected_time.get()
+            hour = self.combobox_hour.get()
+            min = self.combobox_min.get()
+            sec = self.combobox_sec.get()
+            #TODO trigger the treading 
+
+        else:
+            showinfo(title='Error', message='Make sure choose the all options corretly!')
+
+
+    def set_sound(self):
+        ...
+
+    def reset(self):
+        ...
+
+    def remaining_time(self, hour_s, hour=0, min=0, sec=0 ):
+        pass
+
+    def play_sound(self):
+        pass
+
+    def alarm(self):
+        #TODO while loop is here
+        #TODO while loop runs set_remaning_time method each 1 sec until min=0 sec=0 hour=0
+        #TODO if hour sec and min be 0 lunch the sound just a 1 min.
+        pass
+
+#TODO treading runs alarm function.
 
 if __name__ == '__main__':
     alarm = AlarmClock(className='Alarm Clock')
