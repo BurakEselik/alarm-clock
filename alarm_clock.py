@@ -2,27 +2,27 @@
 
 import tkinter as tk
 from tkinter import ttk
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showerror
 from datetime import datetime, time
+from time import sleep
+import winsound
+import threading
 
-
+stop_tread = False
 #search: how to a program runs back ground or runs even if the program close.
 #search: how to a program send a notification 
+alarms = []
 
 class Alarm():
 
-    def __init__(self, h, m, s, **days) -> None:
+    def __init__(self, h=None, m=None, s=None, **days) -> None:
         self.h = h
         self.m = m
         self.s = s
         self.days = days
         #TODO check if is there a same h, m, s, days instance don't create and return an error!
-
-    def alarm(self):
-        #TODO while loop is here
-        #TODO while loop runs set_remaning_time method each 1 sec until min=0 sec=0 hour=0
-        #TODO if hour sec and min be 0 lunch the sound just a 1 min.
-        pass
+        self.time_of_alarm = f'{self.h}:{self.m}:{0 if self.s < 10 else ...}{self.s}'
+        print(self.time_of_alarm)
 
     def remaning_time(self):
         pass
@@ -30,17 +30,28 @@ class Alarm():
     def play_sound(self):
         pass
 
+def alarmm():
+    while 1:
+        sleep(1)
+        current_time = datetime.now()
+        now = current_time.strftime('%H:%M:%S')
+        print(now)
+        if now in alarms:
+            print('time to wake up!')
+            winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
 
+thread = threading.Thread(target = alarmm)
+thread.daemon = True
+thread.start()
 
 #TODO treading runs alarm function.
-
 
 #layout
 class AlarmClock(tk.Tk):
 
     def __init__(self, className) -> None:
         super().__init__(className=className)
-
+        
         #set geometry
         self.title('Alarm Clock App')
         self.resizable(0,0)
@@ -144,23 +155,22 @@ class AlarmClock(tk.Tk):
     def set_alarm(self):
         if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
             hour,min,sec = self.combobox_hour.get(),self.combobox_min.get(),self.combobox_sec.get()
-            #TODO create a Alarm instance
-            #TODO trigger the treading 
-
+            alarms.append(f'{hour}:{min}:{sec}')
+            print(alarms)
         else:
-            showinfo(title='Error', message='Make sure choose the all options corretly!')
+            showerror(title='Error', message='You have to fill hour, min, sec and at least one day sections!')
 
 
     def set_sound(self):
         #TODO open a box and show including sounds and besides user sets a music from own music!
         ...
 
-    
     def reset(self):
         self.combobox_hour.set('')
         self.combobox_min.set('')
         self.combobox_sec.set('')
         self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thur.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
+
 
 if __name__ == '__main__':
     alarm = AlarmClock(className='Alarm Clock')
