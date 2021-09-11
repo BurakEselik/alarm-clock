@@ -9,22 +9,9 @@ from time import sleep
 import winsound
 import threading
 
-
 stop_tread = False
 #search: how to a program runs back ground or runs even if the program close.
 #search: how to a program send a notification 
-alarms = []
-
-def alarmm():
-    while 1:
-        sleep(1)
-        current_time = datetime.now()
-        now = current_time.strftime('%H:%M:%S')
-        print(now, current_time)
-        if now in alarms:
-            print('time to wake up!')
-            winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
-
 
 class Alarm:
 
@@ -35,7 +22,19 @@ class Alarm:
         pass
 
     def play_sound(self):
-        pass
+        winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
+
+    def alarmm(self):
+        while 1:
+            sleep(1)
+            current_time = datetime.now()
+            now = current_time.strftime('%H:%M:%S')
+            current_day = current_time.strftime('%A').lower()[:3]
+            print(now, current_time)
+            for i in self.alarms.values():
+                if (now == i['time']) and (current_day in i['days']):
+                    print('time to wake up!')
+                    self.play_sound()
 
     def create_alarm(self, hour:str, min:str, sec:str, days:tuple):
 
@@ -195,15 +194,13 @@ class AlarmClock(tk.Tk):
         self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thu.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
 
 
-
 def main():
-    thread = threading.Thread(target = alarmm)
+    alarm = Alarm()
+    thread = threading.Thread(target = alarm.alarmm)
     thread.daemon = True
     thread.start()
-    alarm = Alarm()
     alarm_app = AlarmClock(alarm, className='Alarm Clock')
     alarm_app.mainloop()
-
 
 if __name__ == '__main__':
     main()
