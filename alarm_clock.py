@@ -70,6 +70,7 @@ class AlarmClock(tk.Tk):
         self.title('Alarm Clock App')
         self.resizable(0,0)
         self.geometry('400x300')
+        #self.config(bg='#222430')
 
         #set icon
         self.icon =  tk.PhotoImage(file='images/alarm-clock.png')
@@ -139,13 +140,13 @@ class AlarmClock(tk.Tk):
         self.sd_fri = tk.StringVar()
         self.sd_sat= tk.StringVar()
         self.sd_sun = tk.StringVar()
-        self.check_monday = ttk.Checkbutton(self, text='mon', variable=self.sd_mon, onvalue='mon', offvalue=None)
-        self.check_tuesday = ttk.Checkbutton(self, text='tue', variable=self.sd_tue, onvalue='tue', offvalue=None)
-        self.check_wed = ttk.Checkbutton(self, text='wed', variable=self.sd_wed, onvalue='wed', offvalue=None)
-        self.check_thursday = ttk.Checkbutton(self, text='thu', variable=self.sd_thu, onvalue='thu', offvalue=None)
-        self.check_friday = ttk.Checkbutton(self, text='fri', variable=self.sd_fri, onvalue='fri', offvalue=None)
-        self.check_saturday = ttk.Checkbutton(self, text='sat', variable=self.sd_sat, onvalue='sat', offvalue=None)
-        self.check_sunday = ttk.Checkbutton(self, text='sun', variable=self.sd_sun, onvalue='sun', offvalue=None)
+        self.check_monday = ttk.Checkbutton(self, text='mon', variable=self.sd_mon, onvalue='mon', offvalue='')
+        self.check_tuesday = ttk.Checkbutton(self, text='tue', variable=self.sd_tue, onvalue='tue', offvalue='')
+        self.check_wed = ttk.Checkbutton(self, text='wed', variable=self.sd_wed, onvalue='wed', offvalue='')
+        self.check_thursday = ttk.Checkbutton(self, text='thu', variable=self.sd_thu, onvalue='thu', offvalue='')
+        self.check_friday = ttk.Checkbutton(self, text='fri', variable=self.sd_fri, onvalue='fri', offvalue='')
+        self.check_saturday = ttk.Checkbutton(self, text='sat', variable=self.sd_sat, onvalue='sat', offvalue='')
+        self.check_sunday = ttk.Checkbutton(self, text='sun', variable=self.sd_sun, onvalue='sun', offvalue='')
         self.check_monday.place(x=30, y=90)
         self.check_tuesday.place(x=80, y=90)
         self.check_wed.place(x=130, y=90)
@@ -193,6 +194,8 @@ class AlarmClock(tk.Tk):
         self.combobox_sec.set('')
         self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thu.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
 
+    def dark_theme():
+        color = '#1f1f1f'
 
 def main():
     alarm = Alarm()
