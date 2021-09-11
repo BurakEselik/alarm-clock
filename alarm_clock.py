@@ -9,21 +9,27 @@ from time import sleep
 import winsound
 import threading
 
+
 stop_tread = False
 #search: how to a program runs back ground or runs even if the program close.
 #search: how to a program send a notification 
 alarms = []
 
-class Alarm():
+def alarmm():
+    while 1:
+        sleep(1)
+        current_time = datetime.now()
+        now = current_time.strftime('%H:%M:%S')
+        print(now, current_time)
+        if now in alarms:
+            print('time to wake up!')
+            winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
 
-    def __init__(self, h=None, m=None, s=None, **days) -> None:
-        self.h = h
-        self.m = m
-        self.s = s
-        self.days = days
-        #TODO check if is there a same h, m, s, days instance don't create and return an error!
-        self.time_of_alarm = f'{self.h}:{self.m}:{0 if self.s < 10 else ...}{self.s}'
-        print(self.time_of_alarm)
+
+class Alarm:
+
+    def __init__(self) -> None:
+        self.alarms = dict()
 
     def remaning_time(self):
         pass
@@ -31,25 +37,35 @@ class Alarm():
     def play_sound(self):
         pass
 
-def alarmm():
-    while 1:
-        sleep(1)
-        current_time = datetime.now()
-        now = current_time.strftime('%H:%M:%S')
-        print(now)
-        if now in alarms:
-            print('time to wake up!')
-            winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
+    def create_alarm(self, hour:str, min:str, sec:str, days:tuple):
 
-
-
-#TODO treading runs alarm function.
+        if len(hour) == 1:
+            hour = '0' + hour
+        if len(min) == 1:
+            min = '0' + min
+        if len(sec) == 1:
+            sec = '0' + sec
+        
+        if len(self.alarms) == 10:
+            raise ValueError('You have been reached max alarm number!')
+        else:
+            self.alarms.update(
+                    {
+                        f'alarm{len(self.alarms)+1}':{
+                            'time':f'{hour}:{min}:{sec}', 
+                            'days':days
+                            }
+                    }
+                )
+        
+        print(self.alarms)
 
 #layout
 class AlarmClock(tk.Tk):
 
-    def __init__(self, className) -> None:
+    def __init__(self, ala: object, className) -> None:
         super().__init__(className=className)
+        self.ala = ala
         
         #set geometry
         self.title('Alarm Clock App')
@@ -120,14 +136,14 @@ class AlarmClock(tk.Tk):
         self.sd_mon = tk.StringVar()
         self.sd_tue = tk.StringVar()
         self.sd_wed = tk.StringVar()
-        self.sd_thur = tk.StringVar()
+        self.sd_thu = tk.StringVar()
         self.sd_fri = tk.StringVar()
         self.sd_sat= tk.StringVar()
         self.sd_sun = tk.StringVar()
         self.check_monday = ttk.Checkbutton(self, text='mon', variable=self.sd_mon, onvalue='mon', offvalue=None)
         self.check_tuesday = ttk.Checkbutton(self, text='tue', variable=self.sd_tue, onvalue='tue', offvalue=None)
         self.check_wed = ttk.Checkbutton(self, text='wed', variable=self.sd_wed, onvalue='wed', offvalue=None)
-        self.check_thursday = ttk.Checkbutton(self, text='thu', variable=self.sd_thur, onvalue='thu', offvalue=None)
+        self.check_thursday = ttk.Checkbutton(self, text='thu', variable=self.sd_thu, onvalue='thu', offvalue=None)
         self.check_friday = ttk.Checkbutton(self, text='fri', variable=self.sd_fri, onvalue='fri', offvalue=None)
         self.check_saturday = ttk.Checkbutton(self, text='sat', variable=self.sd_sat, onvalue='sat', offvalue=None)
         self.check_sunday = ttk.Checkbutton(self, text='sun', variable=self.sd_sun, onvalue='sun', offvalue=None)
@@ -152,16 +168,18 @@ class AlarmClock(tk.Tk):
         self.lbl_remaning_time.place(x=160, y=220)
 
     def set_alarm(self):
-        if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
+        days = (
+        self.sd_mon.get(),
+        self.sd_tue.get(),
+        self.sd_wed.get(),
+        self.sd_thu.get(),
+        self.sd_fri.get(),
+        self.sd_sat.get(),
+        self.sd_sun.get()
+        )
+        if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get() and any(days):
             hour,min,sec = self.combobox_hour.get(),self.combobox_min.get(),self.combobox_sec.get()
-            if len(hour) == 1:
-                hour = '0' + hour
-            if len(min) == 1:
-                min = '0' + min
-            if len(sec) == 1:
-                sec = '0' + sec
-            alarms.append(f'{hour}:{min}:{sec}')
-            print(alarms)
+            self.ala.create_alarm(hour, min, sec, days)
         else:
             showerror(title='Error', message='You have to fill hour, min, sec and at least one day sections!')
 
@@ -174,12 +192,18 @@ class AlarmClock(tk.Tk):
         self.combobox_hour.set('')
         self.combobox_min.set('')
         self.combobox_sec.set('')
-        self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thur.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
+        self.sd_mon.set(''), self.sd_tue.set(''), self.sd_wed.set(''), self.sd_thu.set(''), self.sd_fri.set(''), self.sd_sat.set(''), self.sd_sun.set('') 
 
 
-if __name__ == '__main__':
+
+def main():
     thread = threading.Thread(target = alarmm)
     thread.daemon = True
     thread.start()
-    alarm = AlarmClock(className='Alarm Clock')
-    alarm.mainloop()
+    alarm = Alarm()
+    alarm_app = AlarmClock(alarm, className='Alarm Clock')
+    alarm_app.mainloop()
+
+
+if __name__ == '__main__':
+    main()
