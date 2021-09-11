@@ -1,4 +1,5 @@
-#install requirement libs
+# -*- coding: utf-8 -*-
+#import requirement libs
 
 import tkinter as tk
 from tkinter import ttk
@@ -40,9 +41,7 @@ def alarmm():
             print('time to wake up!')
             winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
 
-thread = threading.Thread(target = alarmm)
-thread.daemon = True
-thread.start()
+
 
 #TODO treading runs alarm function.
 
@@ -155,6 +154,12 @@ class AlarmClock(tk.Tk):
     def set_alarm(self):
         if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get():
             hour,min,sec = self.combobox_hour.get(),self.combobox_min.get(),self.combobox_sec.get()
+            if len(hour) == 1:
+                hour = '0' + hour
+            if len(min) == 1:
+                min = '0' + min
+            if len(sec) == 1:
+                sec = '0' + sec
             alarms.append(f'{hour}:{min}:{sec}')
             print(alarms)
         else:
@@ -173,5 +178,8 @@ class AlarmClock(tk.Tk):
 
 
 if __name__ == '__main__':
+    thread = threading.Thread(target = alarmm)
+    thread.daemon = True
+    thread.start()
     alarm = AlarmClock(className='Alarm Clock')
     alarm.mainloop()
