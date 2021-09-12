@@ -2,7 +2,7 @@
 #import requirement libs
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Toplevel, ttk
 from tkinter.messagebox import showerror
 from datetime import datetime, time
 from time import sleep
@@ -156,7 +156,7 @@ class AlarmClock(tk.Tk):
         self.check_sunday.place(x=330, y=90) 
 
         #buttons
-        self.btn_sound = tk.Button(self, text='Set Sound', bg='#264653',fg='white', width=15)
+        self.btn_sound = tk.Button(self, text='Set Sound', bg='#264653',fg='white', width=15, command=self.set_sound)
         self.btn_save = tk.Button(self, text='Set Alarm', bg='#2a9d8f',fg='white', width=15, command=self.set_alarm)
         self.btn_sound.place(x=150, y=130)
         self.btn_save.place(x=150, y=170)
@@ -184,9 +184,35 @@ class AlarmClock(tk.Tk):
             showerror(title='Error', message='You have to fill hour, min, sec and at least one day sections!')
 
 
+    def close_set_sound_top(self):
+        new_window.destroy()
+        self.btn_sound['state'] = 'normal'
+
     def set_sound(self):
+        global new_window
+        self.btn_sound['state'] = 'disable'
+        new_window = Toplevel(self)
         #TODO open a box and show including sounds and besides user sets a music from own music!
+        new_window.title('Set Sound Of Alarm')
+        new_window.geometry('200x150')
+        new_window.resizable(0, 0)
+        new_window.iconphoto(False, self.icon)
+        selected = tk.StringVar()
+        r1 = ttk.Radiobutton(new_window, text='Beep', value='beep', variable=selected, command=self.play_sound)
+        r2 = ttk.Radiobutton(new_window, text='Sci-Fi Alarm', value='sci', variable=selected)
+        r3 = ttk.Radiobutton(new_window, text='Buzzer', value='buzzer', variable=selected)
+        r1.place(x=40, y=20)
+        r2.place(x=40, y=50)
+        r3.place(x=40, y=80)
+
+        change_btn = tk.Button(new_window, text='CHANGE', bg='#264653',fg='white', command=...)
+        change_btn.place(x=75, y=115)
+        new_window.protocol('WM_DELETE_WINDOW', self.close_set_sound_top)
+
+    def play_sound(self):
         ...
+        
+
 
     def reset(self):
         self.combobox_hour.set('')
