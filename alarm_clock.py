@@ -3,7 +3,7 @@
 
 import tkinter as tk
 from tkinter import Toplevel, ttk
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showinfo
 from datetime import datetime, time
 from time import sleep
 import winsound
@@ -17,12 +17,21 @@ class Alarm:
 
     def __init__(self) -> None:
         self.alarms = dict()
+        self.sounds = {'sci':'mixkit-scanning-sci-fi-alarm-905.wav' , 
+        'beep':'mixkit-alarm-clock-beep-988.wav' , 'buzzer':'mixkit-warning-alarm-buzzer-991.wav'}
+        self.sound = 'mixkit-scanning-sci-fi-alarm-905.wav'
+        self.SOUNDPATH = 'C:\\Users\\asus\\Desktop\\python_projects\\alarm-clock\\sounds\\'
 
     def remaning_time(self):
         pass
 
     def play_sound(self):
-        winsound.PlaySound(r'C:\Users\asus\Desktop\python_projects\alarm-clock\sounds\mixkit-scanning-sci-fi-alarm-905.wav', winsound.SND_FILENAME)
+        winsound.PlaySound(f'{self.SOUNDPATH}{self.sound}', winsound.SND_FILENAME)
+
+    def set_sound(self, sound):
+
+        self.sound = self.sounds[sound]
+
 
     def alarmm(self):
         while 1:
@@ -156,7 +165,7 @@ class AlarmClock(tk.Tk):
         self.check_sunday.place(x=330, y=90) 
 
         #buttons
-        self.btn_sound = tk.Button(self, text='Set Sound', bg='#264653',fg='white', width=15, command=self.set_sound)
+        self.btn_sound = tk.Button(self, text='Set Sound', bg='#264653',fg='white', width=15, command=self.set_sound_window)
         self.btn_save = tk.Button(self, text='Set Alarm', bg='#2a9d8f',fg='white', width=15, command=self.set_alarm)
         self.btn_sound.place(x=150, y=130)
         self.btn_save.place(x=150, y=170)
@@ -188,7 +197,7 @@ class AlarmClock(tk.Tk):
         new_window.destroy()
         self.btn_sound['state'] = 'normal'
 
-    def set_sound(self):
+    def set_sound_window(self):
         global new_window
         self.btn_sound['state'] = 'disable'
         new_window = Toplevel(self)
@@ -197,23 +206,23 @@ class AlarmClock(tk.Tk):
         new_window.geometry('200x150')
         new_window.resizable(0, 0)
         new_window.iconphoto(False, self.icon)
-        selected = tk.StringVar()
-        r1 = ttk.Radiobutton(new_window, text='Beep', value='beep', variable=selected, command=self.play_sound)
-        r2 = ttk.Radiobutton(new_window, text='Sci-Fi Alarm', value='sci', variable=selected)
-        r3 = ttk.Radiobutton(new_window, text='Buzzer', value='buzzer', variable=selected)
+        self.selected_sound = tk.StringVar()
+        r1 = ttk.Radiobutton(new_window, text='Beep', value='beep', variable=self.selected_sound)
+        r2 = ttk.Radiobutton(new_window, text='Sci-Fi Alarm', value='sci', variable=self.selected_sound)
+        r3 = ttk.Radiobutton(new_window, text='Buzzer', value='buzzer', variable=self.selected_sound)
         r1.place(x=40, y=20)
         r2.place(x=40, y=50)
         r3.place(x=40, y=80)
 
-        change_btn = tk.Button(new_window, text='CHANGE', bg='#264653',fg='white', command=...)
+        change_btn = tk.Button(new_window, text='CHANGE', bg='#264653',fg='white', command=self.set_sound)
         change_btn.place(x=75, y=115)
         new_window.protocol('WM_DELETE_WINDOW', self.close_set_sound_top)
 
-    def play_sound(self):
-        ...
+    def set_sound(self):
+        sound = self.selected_sound.get()
+        self.ala.set_sound(sound)
+        showinfo('Sound', f'Alarm sound adjusted: {sound}')
         
-
-
     def reset(self):
         self.combobox_hour.set('')
         self.combobox_min.set('')
