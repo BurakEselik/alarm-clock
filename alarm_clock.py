@@ -3,6 +3,7 @@
 
 import tkinter as tk
 from tkinter import Toplevel, ttk
+from tkinter import messagebox
 from tkinter.messagebox import showerror, showinfo
 from datetime import datetime, time
 from time import sleep
@@ -24,7 +25,9 @@ class Alarm:
         self.SOUNDPATH = 'C:\\Users\\asus\\Desktop\\python_projects\\alarm-clock\\sounds\\'
 
     def remaning_time(self):
-        pass
+        if any(self.alarms):
+            pass
+
 
     def play_sound(self):
         winsound.PlaySound(f'{self.SOUNDPATH}{self.sound}', winsound.SND_FILENAME)
@@ -47,7 +50,7 @@ class Alarm:
                     notification.notify(
                         title = 'Alarm Clock App',
                         message = 'Knock, Knock Wake Up NEO!!' ,
-                        app_icon = None,
+                        app_icon = 'C:\\Users\\asus\\Desktop\\python_projects\\alarm-clock\\images\\alarm-clock.ico',
                         timeout  = 10
                     )
                     self.play_sound()
@@ -96,7 +99,7 @@ class AlarmClock(tk.Tk):
         self.menubar = tk.Menu(self, bg='light blue')
         self.config(menu=self.menubar)
         self.file_menu = tk.Menu(self.menubar, tearoff=False)
-        self.file_menu.add_command(label='Save Time')
+        #self.file_menu.add_command(label='Save Time')
         self.file_menu.add_command(label='Saved Times')
         self.file_menu.add_separator()
         #submenu
@@ -109,8 +112,10 @@ class AlarmClock(tk.Tk):
         self.menubar.add_cascade(label='Alarm', menu=self.file_menu, underline=0)
 
         self.help_menu = tk.Menu(self.menubar, tearoff=0)
-        self.help_menu.add_command(label='Welcome')
-        self.help_menu.add_command(label='About..')
+        self.help_menu.add_command(label='Welcome', command= lambda: showinfo(
+            title='Welcome', message='Welcome to the Alarm Clock App, use free, open source, enjoy!'
+        ))
+        self.help_menu.add_command(label='About..', command= lambda: showinfo(title='About Us', message='Made by Burak Eselik\nEmail: eselik.burak@gmail.com'))
         self.menubar.add_cascade(label='Help', menu=self.help_menu)
 
         self.lbl_1 = tk.Label(self, text='When to wake you up?')
@@ -183,6 +188,9 @@ class AlarmClock(tk.Tk):
         self.lbl_remaning_time = tk.Label(self, text='Remaning Time: 2h 3m 2s', fg='green')
         self.lbl_remaning_time.place(x=160, y=220)
 
+        self.bind('reset', self.reset)
+        #TODO change ctrl+r
+
     def set_alarm(self):
         days = (
         self.sd_mon.get(),
@@ -196,6 +204,8 @@ class AlarmClock(tk.Tk):
         if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get() and any(days):
             hour,min,sec = self.combobox_hour.get(),self.combobox_min.get(),self.combobox_sec.get()
             self.ala.create_alarm(hour, min, sec, days)
+            self.title('Alarm Clock App     - Successfully Added -')
+            self.after(3000, lambda: self.title('Alarm Clock App'))
         else:
             showerror(title='Error', message='You have to fill hour, min, sec and at least one day sections!')
 
@@ -230,7 +240,7 @@ class AlarmClock(tk.Tk):
         self.ala.set_sound(sound)
         showinfo('Sound', f'Alarm sound adjusted: {sound}')
         
-    def reset(self):
+    def reset(self, *args):
         self.combobox_hour.set('')
         self.combobox_min.set('')
         self.combobox_sec.set('')
@@ -239,9 +249,11 @@ class AlarmClock(tk.Tk):
     def dark_theme():
         color = '#1f1f1f'
 
+    
+
 def main():
     alarm = Alarm()
-    thread = threading.Thread(target = alarm.alarmm)
+    thread = threading.Thread(target = alarm.alarmm, args=[])
     thread.daemon = True
     thread.start()
     alarm_app = AlarmClock(alarm, className='Alarm Clock')
