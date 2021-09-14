@@ -103,7 +103,7 @@ class AlarmClock(tk.Tk):
         self.config(menu=self.menubar)
         self.file_menu = tk.Menu(self.menubar, tearoff=False)
         #self.file_menu.add_command(label='Save Time')
-        self.file_menu.add_command(label='Saved Times')
+        self.file_menu.add_command(label='Saved Alarms')
         self.file_menu.add_separator()
         # submenu
         self.sub_menu = tk.Menu(self.file_menu, tearoff=0)
@@ -256,16 +256,20 @@ class AlarmClock(tk.Tk):
             self.sd_sat.get(),
             self.sd_sun.get()
         )
-        if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get() and any(days):
-            hour, min, sec = self.combobox_hour.get(), self.combobox_min.get(), self.combobox_sec.get()
-            self.ala.create_alarm(hour, min, sec, days)
-            self.title('Alarm Clock App     - Successfully Added -')
-            self.after(3000, lambda: self.title('Alarm Clock App'))
-        else:
-            showerror(
-                        title='Error', 
-                        message='You have to fill hour, min, sec and at least one day sections!'
-                        )
+        try:
+            if self.combobox_hour.get() and self.combobox_min.get() and self.combobox_sec.get() and any(days):
+                hour, min, sec = self.combobox_hour.get(), self.combobox_min.get(), self.combobox_sec.get()
+                self.ala.create_alarm(hour, min, sec, days)
+                self.title('Alarm Clock App     - Successfully Added -')
+                self.after(3000, lambda: self.title('Alarm Clock App'))
+            else:
+                showerror(
+                            title='Error', 
+                            message='You have to fill hour, min, sec and at least one day sections!'
+                            )
+        except ValueError:
+            showerror(title='Alarm Limit Error', 
+                      message='You have reached max alarm, please delete.\nMenubar/Saved Alarms ')
 
     def close_set_sound_top(self):
         new_window.destroy()
