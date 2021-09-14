@@ -8,6 +8,7 @@ from datetime import datetime, time
 from time import sleep
 import winsound
 import threading
+from plyer import notification
 
 stop_tread = False
 #search: how to a program runs back ground or runs even if the program close.
@@ -43,6 +44,12 @@ class Alarm:
             for i in self.alarms.values():
                 if (now == i['time']) and (current_day in i['days']):
                     print('time to wake up!')
+                    notification.notify(
+                        title = 'Alarm Clock App',
+                        message = 'Knock, Knock Wake Up NEO!!' ,
+                        app_icon = None,
+                        timeout  = 10
+                    )
                     self.play_sound()
 
     def create_alarm(self, hour:str, min:str, sec:str, days:tuple):
