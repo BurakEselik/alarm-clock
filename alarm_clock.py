@@ -44,7 +44,7 @@ class Alarm:
             current_time = datetime.now()
             now = current_time.strftime('%H:%M:%S')
             current_day = current_time.strftime('%A').lower()[:3]
-            print(now, current_time)
+            #print(now, current_time)
             for i in self.alarms.values():
                 if (now == i['time']) and (current_day in i['days']):
                     print('time to wake up!')
@@ -103,7 +103,7 @@ class AlarmClock(tk.Tk):
         self.config(menu=self.menubar)
         self.file_menu = tk.Menu(self.menubar, tearoff=False)
         #self.file_menu.add_command(label='Save Time')
-        self.file_menu.add_command(label='Saved Alarms')
+        self.file_menu.add_command(label='Saved Alarms', command=self.saved_alarm_window)
         self.file_menu.add_separator()
         # submenu
         self.sub_menu = tk.Menu(self.file_menu, tearoff=0)
@@ -245,6 +245,43 @@ class AlarmClock(tk.Tk):
 
         self.bind('reset', self.reset)
         # TODO change ctrl+r
+
+    def saved_alarm_window(self) -> None:
+        '''
+        aim: This method shows a window of saved alarms
+        params: No param: 
+        '''
+        root_saved_alarm = Toplevel(self)
+        root_saved_alarm.title('Saved Alarms')
+        root_saved_alarm.geometry('250x300')
+        root_saved_alarm.resizable(0, 0)
+        root_saved_alarm.iconphoto(False, self.icon)
+
+        root_saved_alarm.grid_columnconfigure(0, weight=1)
+        root_saved_alarm.grid_rowconfigure(0, weight=1)
+
+        scrollbar = ttk.Scrollbar(root_saved_alarm, orient='vertical')
+        scrollbar.grid(row=0, column=1, sticky='ns')
+
+        my_alarm_list = [i for i in self.ala.alarms]
+
+        if len(self.ala.alarms) >= 1:
+            alarm1 = tk.StringVar()
+            alarm_1_check = ttk.Checkbutton(root_saved_alarm,
+                                             variable=alarm1,
+                                             onvalue='1',
+                                             offvalue='0',
+                                            text=f"Alarm Name: {my_alarm_list[0]} \nTime: {self.ala.alarms[my_alarm_list[0]]['time']} \nDays: {self.ala.alarms[my_alarm_list[0]]['days']}")
+            alarm_1_check.grid(row=0, column=0, sticky='ew')
+
+        if len(self.ala.alarms) >= 2:
+            alarm2 = tk.StringVar()
+            alarm_2_check = ttk.Checkbutton(root_saved_alarm,
+                                            variable=alarm2,
+                                            onvalue='1',
+                                            offvalue='0',
+                                            text=f"Alarm Name: {my_alarm_list[1]} \nTime: {self.ala.alarms[my_alarm_list[1]]['time']} \nDays: {self.ala.alarms[my_alarm_list[1]]['days']}")
+            alarm_2_check.grid(row=1, column=0, sticky='ew')
 
     def set_alarm(self):
         days = (
