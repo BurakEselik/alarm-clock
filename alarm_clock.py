@@ -27,7 +27,47 @@ class Alarm:
         self.SOUNDPATH = 'C:\\Users\\asus\\Desktop\\python_projects\\alarm-clock\\sounds\\'
 
     def remaning_time(self):
-        if any(self.alarms):
+        todays_list = list()
+        jtimes = list()
+        remaning_times = list()
+        current_time = datetime.now()
+        now = current_time.strftime('%H:%M:%S')
+        current_day = current_time.strftime('%A').lower()[:3]
+        if len(self.alarms) >= 1:
+            for i, k in self.alarms.items():
+                if current_day in k['days']:
+                    todays_list.append(i)
+
+            for j in todays_list:
+                atime = self.alarms[j]['time']
+                jtimes.append(atime)
+
+            for m in jtimes:
+                hour = m[0:2]
+                hourtosec = int(hour) * 60 * 60
+                miin = m[3:5]
+                miintosec = int(miin) * 60
+                sec = m[-2:]
+                sectosec = int(sec)
+                willtime = hourtosec + miintosec + sectosec
+
+                nhour = now[0:2]
+                nhourtosec = int(nhour) * 60 * 60
+                nmiin = now[3:5]
+                nmiintosec = int(nmiin) * 60
+                nsec = now[-2:]
+                nsectosec = int(nsec)
+                nowtime = nhourtosec + nmiintosec + nsectosec
+
+                remaning_times.append(willtime-nowtime)
+
+            a = filter(lambda x:  x > 0 , remaning_times)
+            positif_r_times = list(a)
+            
+            remaning_timee = min(positif_r_times)
+            print(remaning_timee)
+            
+        else:
             pass
 
     def play_sound(self):
