@@ -65,9 +65,10 @@ class Alarm:
 
             a = filter(lambda x:  x > 0 , remaning_times)
             positif_r_times = list(a)
-            
-            rm_time = min(positif_r_times)
-            
+            try:
+                rm_time = min(positif_r_times)
+            except ValueError:
+                 return print('times entered for today are behind now ')
             print('kalan saniye: ', rm_time)
             #convert seconds to hour
             ##############new version######
@@ -108,7 +109,7 @@ class Alarm:
                 print(f'{rm_hour}:{rm_min}:{rm_sec}')
         
         else:
-            pass
+            print('No alarm!')
 
     def convert_str(self, number: int) -> str:
         '''
@@ -147,7 +148,7 @@ class Alarm:
             current_time = datetime.now()
             now = current_time.strftime('%H:%M:%S')
             current_day = current_time.strftime('%A').lower()[:3]
-            #print(now, current_time)
+            #print(now)
             for i in self.alarms.values():
                 if (now == i['time']) and (current_day in i['days']):
                     print('time to wake up!')
@@ -476,6 +477,9 @@ def main() -> None:
     thread = threading.Thread(target=alarm.alarmm, args=[])
     thread.daemon = True
     thread.start()
+    t2 = threading.Thread(target=alarm.start)
+    t2.daemon = True
+    t2.start()
     alarm_app = AlarmClock(alarm, className='Alarm Clock')
     alarm_app.mainloop()
 
