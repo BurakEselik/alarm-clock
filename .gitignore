@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 test_sound.py
 test.py
+rt_test.py
+
 # C extensions
 *.so
 
