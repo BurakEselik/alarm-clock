@@ -5,8 +5,9 @@ import tkinter as tk
 from tkinter import Toplevel, ttk
 from tkinter import messagebox
 from tkinter.messagebox import showerror, showinfo
-from datetime import datetime, time
+from datetime import datetime
 from time import sleep
+import time
 import winsound
 import threading
 from plyer import notification
@@ -15,6 +16,7 @@ stop_tread = False
 # search: how to a program runs back ground or runs even if the program close.
 # search: how to a program send a notification
 
+working_time = float()
 
 class Alarm:
 
@@ -64,11 +66,72 @@ class Alarm:
             a = filter(lambda x:  x > 0 , remaning_times)
             positif_r_times = list(a)
             
-            remaning_timee = min(positif_r_times)
-            print(remaning_timee)
+            rm_time = min(positif_r_times)
             
+            print('kalan saniye: ', rm_time)
+            #convert seconds to hour
+            ##############new version######
+            if rm_time >= 3600:
+                rm_hour = rm_time // 3600
+                
+                rm_hour = self.convert_str(rm_hour)
+                rm_time = rm_time % 3600
+
+                if rm_time >= 60:
+                    rm_min = rm_time // 60
+                    rm_min = self.convert_str(rm_min)
+                    rm_time = rm_time % 60 
+                    if 0 <= rm_time < 60:
+                        rm_sec = rm_time
+                        rm_sec = self.convert_str(rm_sec)
+            
+                print(f'{rm_hour}:{rm_min}:{rm_sec}')
+
+            elif rm_time >= 60:
+                rm_hour = '00'
+                
+                rm_min = rm_time // 60
+                rm_min = self.convert_str(rm_min)
+                rm_time = rm_time % 60
+                if 0 <= rm_time < 60:
+                    rm_sec = rm_time
+                    rm_sec = self.convert_str(rm_sec)
+                
+                print(f'{rm_hour}:{rm_min}:{rm_sec}')
+                    
+
+            elif 0 <= rm_time < 60:
+                rm_hour = '00'
+                rm_min = '00'
+                rm_sec = rm_time
+                rm_sec = self.convert_str(rm_sec)
+                print(f'{rm_hour}:{rm_min}:{rm_sec}')
+        
         else:
             pass
+
+    def convert_str(self, number: int) -> str:
+        '''
+        This function takes a number and returns str
+        but if number len is equal one so function adds 0 to the str
+
+        Param: number: int 
+        '''
+
+        number = str(number)
+        if len(number) == 1:
+            number = '0' + number
+        return number
+
+  
+    def start(self):
+        global working_time
+        while 1:     
+            startt = time.time()
+            self.remaning_time()
+            end = time.time()
+            working_time = end - startt
+            sleep(1 - working_time)
 
     def play_sound(self):
         winsound.PlaySound(f'{self.SOUNDPATH}{self.sound}',
